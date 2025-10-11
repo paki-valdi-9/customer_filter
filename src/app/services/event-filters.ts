@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { CustomerEvent, Property } from './models';
@@ -8,8 +8,7 @@ import { CustomerEvent, Property } from './models';
 })
 export class EventService {
   private url = 'https://br-fe-assignment.github.io/customer-events/events.json';
-
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getEvents(): Observable<CustomerEvent[]> {
     return this.http.get<any>(this.url).pipe(
