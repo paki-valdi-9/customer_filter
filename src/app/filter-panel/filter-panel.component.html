@@ -1,0 +1,131 @@
+<!-- <div class="panel">
+  <h2>Customer Filter</h2>
+
+  <div class="discard-filters-wrapper">
+    <button mat-button (click)="discardFilters()">Discard filters</button>
+  </div>
+
+  <div class="customer-filters-wrapper">
+    <div class="filters-list">
+      @for (f of filters; track f.id) {
+      <div class="filter-card">
+        <div class="row">
+          <mat-form-field appearance="outline" class="attr">
+            <mat-label>Attribute</mat-label>
+            <mat-select
+              [value]="f.attribute"
+              (selectionChange)="updateFilterAttr(f.id, $event.value)"
+            >
+              @for (a of attributeOptions; track $index) {
+              <mat-option [value]="a">{{ a }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="op">
+            <mat-label>Operator</mat-label>
+            <mat-select
+              [value]="f.operator"
+              (selectionChange)="updateFilterOperator(f.id, $event.value)"
+            >
+              @for (o of operators; track $index) {
+              <mat-option [value]="o">{{ o }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="val">
+            <mat-label>Value</mat-label>
+            <input
+              matInput
+              [value]="f.value"
+              (input)="updateFilterValue(f.id, $any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-icon-button (click)="removeFilter(f.id)" title="Delete filter">
+              <mat-icon aria-hidden="false" aria-label="Delete icon">delete</mat-icon>
+            </button>
+            <button mat-icon-button (click)="copyFilter(f.id)" title="Copy filter">
+              <mat-icon aria-hidden="false" aria-label="Copy icon">content_copy</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      }
+
+      <div class="add-filter-wrapper">
+        <button mat-stroked-button (click)="addFilter()">+ Add filter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="apply-filters-wrapper">
+    <button mat-flat-button color="primary" (click)="applyFilters()">Apply filters</button>
+  </div>
+</div> -->
+<div class="panel">
+  <h2>Customer Filter</h2>
+
+  <button mat-flat-button color="primary" (click)="addEventGroup()">+ Add event</button>
+
+  @for(g of eventGroups; track g.id) {
+  <div class="event-group">
+    <h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Select event</mat-label>
+        <mat-select [value]="g.event" (selectionChange)="onEventChange(g, $event.value)">
+          @for(e of events; track e.name) {
+          <mat-option [value]="e.name">{{ e.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button mat-icon-button (click)="removeEventGroup(g.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </h3>
+
+    @if(g.event) {
+    <div class="filters">
+      @for(f of g.filters; track f.id) {
+      <div class="filter-row">
+        <mat-form-field>
+          <mat-label>Property</mat-label>
+          <mat-select [value]="f.property" (selectionChange)="f.property = $event.value">
+            @for(p of getPropertiesForEvent(g.event!) ; track p.name) {
+            <mat-option [value]="p.name">
+              {{ p.name }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Operator</mat-label>
+          <mat-select [value]="f.operator" (selectionChange)="f.operator = $event.value">
+            @for(o of getOperatorsForProperty(g.event!, f.property!) ; track o) {
+            <mat-option [value]="o">
+              {{ o }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Value</mat-label>
+          <input matInput [(ngModel)]="f.value" />
+        </mat-form-field>
+
+        <button mat-icon-button (click)="removeFilter(g, f.id)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      }
+      <button mat-stroked-button (click)="addFilter(g)">+ Add property filter</button>
+    </div>
+    }
+  </div>
+  }
+  <button mat-flat-button color="accent" (click)="applyFilters()">Apply filters</button>
+</div>
