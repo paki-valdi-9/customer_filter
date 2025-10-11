@@ -29,7 +29,7 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "DOM"],
     "paths": {
-      "@customer-filter/*": ["src/*"]
+      "@customer_filter/*": ["src/*"]
     }
   },
   "angularCompilerOptions": {

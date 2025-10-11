@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "customer-filter": {
+    "customer_filter": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "customer-filter:build:production"
+              "buildTarget": "customer_filter:build:production"
             },
             "development": {
-              "buildTarget": "customer-filter:build:development"
+              "buildTarget": "customer_filter:build:development"
             }
           },
           "defaultConfiguration": "development"

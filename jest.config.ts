@@ -91,7 +91,7 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    '@personal-quiz-app-f/(.*)': '<rootDir>/src/$1',
+    '@customer_filter/(.*)': '<rootDir>/src/$1',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
