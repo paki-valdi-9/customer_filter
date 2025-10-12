@@ -1,0 +1,21 @@
+<mat-form-field appearance="outline">
+  <mat-label>Select event</mat-label>
+  <mat-select
+    [value]="selectedEvent.event"
+    (selectionChange)="onEventChange(selectedEvent, $event.value)"
+  >
+    @for(e of this.events; track e.name) {
+    <mat-option [value]="e.name">{{ e.name }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+<div>
+  <button mat-icon-button (click)="copyEvent(selectedEventIndex)" title="Copy filter">
+    <mat-icon aria-hidden="false" aria-label="Copy icon">content_copy</mat-icon>
+  </button>
+  @if(selectedEventIndex > 0) {
+  <button mat-icon-button (click)="removeEventGroup(selectedEvent.id)">
+    <mat-icon>delete</mat-icon>
+  </button>
+  }
+</div>

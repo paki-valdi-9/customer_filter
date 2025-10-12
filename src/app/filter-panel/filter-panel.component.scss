@@ -8,9 +8,12 @@
   padding: 10px;
   margin: 8px;
 
-  h3 {
-    display: flex;
-    justify-content: space-between;
+  .event-wrapper {
+    app-event-component {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 }
 

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
+import { EventComponent } from './components/event/event.component';
 
 @Component({
   selector: 'app-filter-panel',
@@ -24,6 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatChipsModule,
     FormsModule,
     MatDividerModule,
+    EventComponent,
   ],
 })
 export class FilterPanelComponent {
