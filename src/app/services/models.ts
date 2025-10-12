@@ -10,7 +10,7 @@ export interface CustomerEvent {
   properties: Property[];
 }
 
-export interface FilterCondition {
+export interface PropertyCondition {
   id: string;
   property: string | null;
   operator: string;
@@ -21,5 +21,5 @@ export interface FilterCondition {
 export interface EventFilterGroup {
   id: string;
   event: string | null;
-  filters: FilterCondition[];
+  properties: PropertyCondition[];
 }
