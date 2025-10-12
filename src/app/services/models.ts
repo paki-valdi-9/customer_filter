@@ -15,6 +15,7 @@ export interface PropertyCondition {
   property: string | null;
   operator: string;
   value: string;
+  value2?: string; // if in between is selected as operator
   propertyType?: 'string' | 'number';
 }
 

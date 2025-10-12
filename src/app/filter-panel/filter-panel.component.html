@@ -54,10 +54,18 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Value</mat-label>
-            <input matInput [(ngModel)]="p.value" />
-          </mat-form-field>
+          <div class="property-values-wrapper">
+            <mat-form-field>
+              <mat-label>Value</mat-label>
+              <input matInput [(ngModel)]="p.value" />
+            </mat-form-field>
+            @if(p.operator === 'in between') {
+            <mat-form-field>
+              <mat-label>Value - in between</mat-label>
+              <input matInput [(ngModel)]="p.value2" />
+            </mat-form-field>
+            }
+          </div>
 
           <button mat-icon-button (click)="removeFilter(g, p.id)">
             <mat-icon>close</mat-icon>
