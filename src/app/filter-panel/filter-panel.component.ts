@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { CustomerEvent, EventFilterGroup } from '../services/models';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,39 +31,41 @@ import { EventComponent } from './components/event/event.component';
 export class FilterPanelComponent {
   @Input() events: CustomerEvent[] = [];
 
-  eventGroups: EventFilterGroup[] = [{ id: uuidv4(), event: null, properties: [] }];
-
+  eventGroups = signal<EventFilterGroup[]>([{ id: uuidv4(), event: null, properties: [] }]);
   stringOps = ['equals', 'does not equal', 'contains', 'does not contain'];
   numberOps = ['equal to', 'in between', 'less than', 'greater than'];
 
   addEventGroup() {
-    this.eventGroups.push({ id: uuidv4(), event: null, properties: [] });
-  }
-
-  removeEventGroup(id: string) {
-    this.eventGroups = this.eventGroups.filter((g) => g.id !== id);
+    this.eventGroups.update((groups) => [...groups, { id: uuidv4(), event: null, properties: [] }]);
   }
 
   discardEvents() {
-    this.eventGroups = [{ id: uuidv4(), event: null, properties: [] }];
+    this.eventGroups.set([{ id: uuidv4(), event: null, properties: [] }]);
   }
 
   addFilter(group: EventFilterGroup) {
-    group.properties.push({
-      id: uuidv4(),
-      property: null,
-      operator: 'equals',
-      value: '',
-    });
+    this.eventGroups.update((groups) =>
+      groups.map((g) =>
+        g.id === group.id
+          ? {
+              ...g,
+              properties: [
+                ...g.properties,
+                {
+                  id: uuidv4(),
+                  property: null,
+                  operator: 'equals',
+                  value: '',
+                },
+              ],
+            }
+          : g
+      )
+    );
   }
 
   removeFilter(group: EventFilterGroup, propertyId: string) {
     group.properties = group.properties.filter((p) => p.id !== propertyId);
-  }
-
-  onEventChange(group: EventFilterGroup, eventName: string) {
-    group.event = eventName;
-    group.properties = [];
   }
 
   getPropertiesForEvent(eventName: string) {
@@ -76,13 +78,6 @@ export class FilterPanelComponent {
   }
 
   applyFilters() {
-    console.log('APPLY FILTERS MODEL:', JSON.parse(JSON.stringify(this.eventGroups)));
-  }
-
-  copyEvent(index: number) {
-    const eventGroup = this.eventGroups[index];
-    const copiedGroup = JSON.parse(JSON.stringify(eventGroup));
-    copiedGroup.id = uuidv4();
-    this.eventGroups.splice(index + 1, 0, copiedGroup);
+    console.log('APPLY FILTERS MODEL:', JSON.parse(JSON.stringify(this.eventGroups())));
   }
 }

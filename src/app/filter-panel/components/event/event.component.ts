@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, WritableSignal } from '@angular/core';
 import { CustomerEvent, EventFilterGroup } from '../../../services/models';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,23 +15,25 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class EventComponent {
   @Input() events: CustomerEvent[] = [];
-  @Input() eventGroups: EventFilterGroup[] = [{ id: uuidv4(), event: null, properties: [] }];
+  @Input() eventGroups!: WritableSignal<EventFilterGroup[]>;
   @Input() selectedEvent: EventFilterGroup | undefined;
   @Input() selectedEventIndex: number | undefined;
 
   onEventChange(group: EventFilterGroup, eventName: string) {
-    group.event = eventName;
-    group.properties = [];
+    this.eventGroups.update((groups) =>
+      groups.map((g) => (g.id === group.id ? { ...g, event: eventName, properties: [] } : g))
+    );
   }
 
   copyEvent(index: number) {
-    const eventGroup = this.eventGroups[index];
-    const copiedGroup = JSON.parse(JSON.stringify(eventGroup));
-    copiedGroup.id = uuidv4();
-    this.eventGroups.splice(index + 1, 0, copiedGroup);
+    this.eventGroups.update((groups) => {
+      const eventGroup = groups[index];
+      const copiedGroup = { ...eventGroup, id: uuidv4() };
+      return [...groups.slice(0, index + 1), copiedGroup, ...groups.slice(index + 1)];
+    });
   }
 
   removeEventGroup(id: string) {
-    this.eventGroups = this.eventGroups.filter((g) => g.id !== id);
+    this.eventGroups.update((groups) => groups.filter((g) => g.id !== id));
   }
 }

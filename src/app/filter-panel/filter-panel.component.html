@@ -5,7 +5,7 @@
   </div>
 
   <div class="filter-panel-wrapper">
-    @for(g of eventGroups; track $index) {
+    @for(g of eventGroups(); track $index) {
     <div class="event-group">
       <div class="event-wrapper">
         <app-event-component
