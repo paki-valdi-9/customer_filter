@@ -1,10 +1,10 @@
 import { Component, Input, WritableSignal } from '@angular/core';
-import { CustomerEvent, EventFilterGroup } from '../../../services/models';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CustomerEventDomain, FunnelSteps } from '../../store/model';
 
 @Component({
   selector: 'app-event-component',
@@ -14,26 +14,28 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [MatButtonModule, MatSelectModule, MatFormFieldModule, MatIconModule],
 })
 export class EventComponent {
-  @Input() events: CustomerEvent[] = [];
-  @Input() eventGroups!: WritableSignal<EventFilterGroup[]>;
-  @Input() selectedEvent: EventFilterGroup | undefined;
+  @Input() fetchedEvents: CustomerEventDomain[] = [];
+  @Input() funnelSteps!: WritableSignal<FunnelSteps[]>;
+  @Input() selectedEvent: FunnelSteps | undefined;
   @Input() selectedEventIndex: number | undefined;
 
-  onEventChange(group: EventFilterGroup, eventName: string) {
-    this.eventGroups.update((groups) =>
-      groups.map((g) => (g.id === group.id ? { ...g, event: eventName, properties: [] } : g))
+  onEventChange(group: FunnelSteps, selectedEventName: string) {
+    this.funnelSteps.update((steps) =>
+      steps.map((step) =>
+        step.id === group.id ? { ...step, name: selectedEventName, eventAttributes: [] } : step
+      )
     );
   }
 
   copyEvent(index: number) {
-    this.eventGroups.update((groups) => {
-      const eventGroup = groups[index];
+    this.funnelSteps.update((steps) => {
+      const eventGroup = steps.find((step) => step.id === this.selectedEvent?.id);
       const copiedGroup = { ...eventGroup, id: uuidv4() };
-      return [...groups.slice(0, index + 1), copiedGroup, ...groups.slice(index + 1)];
+      return [...steps.slice(0, index + 1), copiedGroup, ...steps.slice(index + 1)];
     });
   }
 
   removeEventGroup(id: string) {
-    this.eventGroups.update((groups) => groups.filter((g) => g.id !== id));
+    this.funnelSteps.update((steps) => steps.filter((step) => step.id !== id));
   }
 }

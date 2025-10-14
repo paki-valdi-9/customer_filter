@@ -1,31 +1,35 @@
 <div class="customer-filter-wrapper">
   <h2 class="customer-filter-title">Customer Filter</h2>
   <div class="discard-filters-wrapper">
-    <button mat-button (click)="discardEvents()">Discard filters</button>
+    <button mat-button (click)="discardAllFunnelSteps()">Discard filters</button>
   </div>
 
   <div class="filter-panel-wrapper">
-    @for(g of eventGroups(); track $index) {
+    @for(event of funnelSteps(); track $index) {
     <div class="event-group">
       <div class="event-wrapper">
         <app-event-component
-          [events]="events"
-          [eventGroups]="eventGroups"
-          [selectedEvent]="g"
+          [fetchedEvents]="fetchedEvents"
+          [funnelSteps]="funnelSteps"
+          [selectedEvent]="event"
           [selectedEventIndex]="$index"
         ></app-event-component>
       </div>
 
-      @if(g.event) {
+      @if(event.name) {
       <div class="filters">
-        @for(p of g.properties; track p.id) {
+        @for(attribute of event.eventAttributes; track attribute.id) {
         <div class="filter-row">
+          <!-- <app-property-component> </app-property-component> -->
           <mat-form-field>
-            <mat-label>Property</mat-label>
-            <mat-select [value]="p.property" (selectionChange)="p.property = $event.value">
-              @for(p of getPropertiesForEvent(g.event!) ; track p.name) {
-              <mat-option [value]="p.name">
-                {{ p.name }}
+            <mat-label>Select an attribute</mat-label>
+            <mat-select
+              [value]="attribute.name"
+              (selectionChange)="onAttributeNameChange(event, attribute, $event.value)"
+            >
+              @for(property of getPropertiesOfEvent(event.name!) ; track property.name) {
+              <mat-option [value]="property.name">
+                {{ property.name }}
               </mat-option>
               }
             </mat-select>
@@ -33,10 +37,14 @@
 
           <mat-form-field>
             <mat-label>Operator</mat-label>
-            <mat-select [value]="p.operator" (selectionChange)="p.operator = $event.value">
-              @for(o of getOperatorsForProperty(g.event!, p.property!) ; track o) {
-              <mat-option [value]="o">
-                {{ o }}
+            <mat-select
+              [value]="attribute.operator"
+              (selectionChange)="attribute.operator = $event.value"
+            >
+              @for(operator of getOperatorsOfProperty(event.name!, attribute.name!) ; track
+              operator) {
+              <mat-option [value]="operator">
+                {{ operator }}
               </mat-option>
               }
             </mat-select>
@@ -45,22 +53,28 @@
           <div class="property-values-wrapper">
             <mat-form-field>
               <mat-label>Value</mat-label>
-              <input matInput [(ngModel)]="p.value" />
+              <input matInput [(ngModel)]="attribute.value" />
             </mat-form-field>
-            @if(p.operator === 'in between') {
+            @if(attribute.operator === 'in between') {
             <mat-form-field>
               <mat-label>Value - in between</mat-label>
-              <input matInput [(ngModel)]="p.value2" />
+              <input matInput [(ngModel)]="attribute.valueFrom" />
             </mat-form-field>
             }
           </div>
 
-          <button mat-icon-button (click)="removeFilter(g, p.id)">
+          <button
+            class="event-attribute-close-button"
+            mat-icon-button
+            (click)="removeEventAttribute(event, attribute.id)"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </div>
         }
-        <button mat-stroked-button (click)="addFilter(g)">+Add an event attribute</button>
+        <button mat-stroked-button (click)="addEventAttribute(event)">
+          +Add an event attribute
+        </button>
       </div>
       }
     </div>
@@ -68,7 +82,7 @@
     }
 
     <div class="add-event-wrapper">
-      <button mat-flat-button color="primary" (click)="addEventGroup()">+ ADD FUNNEL STEP</button>
+      <button mat-flat-button color="primary" (click)="addFunnelStep()">+ ADD FUNNEL STEP</button>
     </div>
   </div>
 

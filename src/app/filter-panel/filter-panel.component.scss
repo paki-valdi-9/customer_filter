@@ -66,6 +66,14 @@
 .filter-row {
   display: flex;
   gap: 12px;
+
+  .event-attribute-close-button {
+    visibility: hidden;
+  }
+}
+
+.filter-row:hover .event-attribute-close-button {
+  visibility: visible;
 }
 
 .property-values-wrapper {
