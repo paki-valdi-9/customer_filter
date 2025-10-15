@@ -1,5 +1,5 @@
 <div class="customer-filter-wrapper">
-  <h2 class="customer-filter-title">Customer Filter</h2>
+  <h3 class="customer-filter-title">CUSTOMER FILTER</h3>
   <div class="discard-filters-wrapper">
     <button mat-button (click)="discardAllFunnelSteps()">Discard filters</button>
   </div>
@@ -42,8 +42,8 @@
           </button>
         </div>
         }
-        <button mat-stroked-button (click)="addEventAttribute(step)">
-          +Add an event attribute
+        <button class="event-attribute-button" (click)="addEventAttribute(step)">
+          {{ step.eventAttributes?.length > 0 ? 'Refine more' : '+ Add an event attribute' }}
         </button>
       </div>
       }
@@ -51,8 +51,8 @@
     <mat-divider></mat-divider>
     }
 
-    <div class="add-event-wrapper">
-      <button mat-flat-button color="primary" (click)="addFunnelStep()">+ ADD FUNNEL STEP</button>
+    <div class="add-step-wrapper">
+      <button (click)="addFunnelStep()">+ ADD FUNNEL STEP</button>
     </div>
   </div>
 
