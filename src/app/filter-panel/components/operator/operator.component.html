@@ -1,9 +1,6 @@
 @if(selectedAttribute.name?.length > 0) {
 <mat-form-field>
-  <mat-select
-    [value]="selectedAttribute.operator"
-    (selectionChange)="selectedAttribute.operator = $event.value"
-  >
+  <mat-select [(ngModel)]="selectedAttribute.operator" (ngModelChange)="onOperatorChange()">
     @for(operator of selectedAttributeOperators ; track operator) {
     <mat-option [value]="operator">
       {{ operator }}

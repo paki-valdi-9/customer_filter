@@ -32,6 +32,9 @@ importers:
       '@angular/router':
         specifier: ^20.3.0
         version: 20.3.4(@angular/common@20.3.4(@angular/core@20.3.4(@angular/compiler@20.3.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.4(@angular/compiler@20.3.4)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.4(@angular/animations@20.3.4(@angular/core@20.3.4(@angular/compiler@20.3.4)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.4(@angular/core@20.3.4(@angular/compiler@20.3.4)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.4(@angular/compiler@20.3.4)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      ngx-mat-select-search:
+        specifier: ^8.0.2
+        version: 8.0.2(@angular/material@20.2.8(77988740ae74fb4aaf3ed71e07feeca3))
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -4854,6 +4857,11 @@ packages:
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
+
+  ngx-mat-select-search@8.0.2:
+    resolution: {integrity: sha512-Ke8wpcgrhgJeC2d1Qqc4Hec57OrqGVJURw5OW55xVgGIbgT+mqVIm6wiOOTwBSnwskb4x4v59zbtC+VGoyYIsA==}
+    peerDependencies:
+      '@angular/material': ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0
 
   node-addon-api@6.1.0:
     resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
@@ -12010,6 +12018,11 @@ snapshots:
   negotiator@1.0.0: {}
 
   neo-async@2.6.2: {}
+
+  ngx-mat-select-search@8.0.2(@angular/material@20.2.8(77988740ae74fb4aaf3ed71e07feeca3)):
+    dependencies:
+      '@angular/material': 20.2.8(77988740ae74fb4aaf3ed71e07feeca3)
+      tslib: 2.8.1
 
   node-addon-api@6.1.0:
     optional: true

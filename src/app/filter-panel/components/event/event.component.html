@@ -11,7 +11,14 @@
       [value]="selectedFunnelStep.name"
       (selectionChange)="onEventChange(selectedFunnelStep, $event.value)"
     >
-      @for(fetchedEvent of this.fetchedEvents; track fetchedEvent.name) {
+      <mat-option>
+        <ngx-mat-select-search
+          [formControl]="eventFilterFormControl"
+          placeholderLabel="Filter events..."
+          noEntriesFoundLabel="No results"
+        ></ngx-mat-select-search>
+      </mat-option>
+      @for(fetchedEvent of this.filteredEvents$ | async; track fetchedEvent.name) {
       <mat-option [value]="fetchedEvent.name">{{ fetchedEvent.name }}</mat-option>
       }
     </mat-select>
