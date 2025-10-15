@@ -1,0 +1,22 @@
+@if(selectedAttribute.name?.length > 0) {
+<mat-form-field>
+  <mat-select
+    [value]="selectedAttribute.operator"
+    (selectionChange)="selectedAttribute.operator = $event.value"
+  >
+    @for(operator of selectedAttributeOperators ; track operator) {
+    <mat-option [value]="operator">
+      {{ operator }}
+    </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+  <input matInput [(ngModel)]="selectedAttribute.value" />
+</mat-form-field>
+@if(selectedAttribute.operator === 'in between') {
+<mat-form-field>
+  <input matInput [(ngModel)]="selectedAttribute.valueFrom" />
+</mat-form-field>
+} }

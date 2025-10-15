@@ -12,6 +12,7 @@ import { EventComponent } from './components/event/event.component';
 import { CustomerEventDomain, FunnelStep, PropertyDomain } from './store/model';
 import { NUMBER_OPS_CONST, STRING_OPS_CONST } from '../shared/store/constants';
 import { PropertyComponent } from './components/property/property.component';
+import { OperatorComponent } from './components/operator/operator.component';
 @Component({
   selector: 'app-filter-panel',
   templateUrl: './filter-panel.component.html',
@@ -28,6 +29,7 @@ import { PropertyComponent } from './components/property/property.component';
     MatDividerModule,
     EventComponent,
     PropertyComponent,
+    OperatorComponent,
   ],
 })
 export class FilterPanelComponent {
@@ -36,8 +38,8 @@ export class FilterPanelComponent {
   protected funnelSteps = signal<FunnelStep[]>([{ id: uuidv4(), name: null, eventAttributes: [] }]);
 
   protected addFunnelStep() {
-    this.funnelSteps.update((groups) => [
-      ...groups,
+    this.funnelSteps.update((steps) => [
+      ...steps,
       { id: uuidv4(), name: null, eventAttributes: [] },
     ]);
   }
@@ -46,14 +48,14 @@ export class FilterPanelComponent {
     this.funnelSteps.set([{ id: uuidv4(), name: null, eventAttributes: [] }]);
   }
 
-  protected addEventAttribute(newGroup: FunnelStep) {
-    this.funnelSteps.update((groups) =>
-      groups.map((group) =>
-        group.id === newGroup.id
+  protected addEventAttribute(newStep: FunnelStep) {
+    this.funnelSteps.update((steps) =>
+      steps.map((step) =>
+        step.id === newStep.id
           ? {
-              ...group,
+              ...step,
               eventAttributes: [
-                ...group.eventAttributes,
+                ...step.eventAttributes,
                 {
                   id: uuidv4(),
                   name: null,
@@ -62,13 +64,13 @@ export class FilterPanelComponent {
                 },
               ],
             }
-          : group
+          : step
       )
     );
   }
 
-  protected removeEventAttribute(group: FunnelStep, propertyId: string) {
-    group.eventAttributes = group.eventAttributes.filter((p) => p.id !== propertyId);
+  protected removeEventAttribute(step: FunnelStep, propertyId: string) {
+    step.eventAttributes = step.eventAttributes.filter((p) => p.id !== propertyId);
   }
 
   protected getPropertiesOfEvent(selectedEventName: string): PropertyDomain[] {
