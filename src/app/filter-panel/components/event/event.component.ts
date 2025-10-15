@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CustomerEventDomain, FunnelSteps } from '../../store/model';
+import { CustomerEventDomain, FunnelStep } from '../../store/model';
 
 @Component({
   selector: 'app-event-component',
@@ -15,11 +15,11 @@ import { CustomerEventDomain, FunnelSteps } from '../../store/model';
 })
 export class EventComponent {
   @Input() fetchedEvents: CustomerEventDomain[] = [];
-  @Input() funnelSteps!: WritableSignal<FunnelSteps[]>;
-  @Input() selectedEvent: FunnelSteps | undefined;
+  @Input() funnelSteps!: WritableSignal<FunnelStep[]>;
+  @Input() selectedFunnelStep: FunnelStep | undefined;
   @Input() selectedEventIndex: number | undefined;
 
-  onEventChange(group: FunnelSteps, selectedEventName: string) {
+  onEventChange(group: FunnelStep, selectedEventName: string) {
     this.funnelSteps.update((steps) =>
       steps.map((step) =>
         step.id === group.id ? { ...step, name: selectedEventName, eventAttributes: [] } : step
@@ -29,7 +29,7 @@ export class EventComponent {
 
   copyEvent(index: number) {
     this.funnelSteps.update((steps) => {
-      const eventGroup = steps.find((step) => step.id === this.selectedEvent?.id);
+      const eventGroup = steps.find((step) => step.id === this.selectedFunnelStep?.id);
       const copiedGroup = { ...eventGroup, id: uuidv4() };
       return [...steps.slice(0, index + 1), copiedGroup, ...steps.slice(index + 1)];
     });

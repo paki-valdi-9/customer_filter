@@ -1,8 +1,8 @@
 <mat-form-field appearance="outline">
   <mat-label>Select an event</mat-label>
   <mat-select
-    [value]="selectedEvent.name"
-    (selectionChange)="onEventChange(selectedEvent, $event.value)"
+    [value]="selectedFunnelStep.name"
+    (selectionChange)="onEventChange(selectedFunnelStep, $event.value)"
   >
     @for(fetchedEvent of this.fetchedEvents; track fetchedEvent.name) {
     <mat-option [value]="fetchedEvent.name">{{ fetchedEvent.name }}</mat-option>
@@ -14,7 +14,7 @@
     <mat-icon aria-hidden="false" aria-label="Copy icon">content_copy</mat-icon>
   </button>
   @if(selectedEventIndex > 0) {
-  <button mat-icon-button (click)="removeEventGroup(selectedEvent.id)">
+  <button mat-icon-button (click)="removeEventGroup(selectedFunnelStep.id)">
     <mat-icon>delete</mat-icon>
   </button>
   }

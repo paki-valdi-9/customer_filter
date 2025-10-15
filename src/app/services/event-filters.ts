@@ -15,7 +15,6 @@ export class EventService {
   toDomainEvents(): Observable<CustomerEventDomain[]> {
     return this.http.get<EventsDto>(this.url).pipe(
       map((fetchedData) => {
-        console.log(fetchedData);
         return (fetchedData.events || []).map((event: CustomerEventDto) => ({
           id: uuidv4(),
           name: event.type,
