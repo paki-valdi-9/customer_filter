@@ -1,3 +1,5 @@
+@use '../../variables/variables';
+
 .event-group {
   padding: 10px;
   margin: 8px;
@@ -11,40 +13,60 @@
   }
 }
 
+.customer-filter-wrapper {
+  max-width: 95%;
+  margin: 0 auto;
+  border: 1px solid variables.$outside-border;
+  border-radius: 8px;
+  background: variables.$very-light-purple;
+}
+
+.customer-filter-title {
+  margin: 16px;
+  color: variables.$title-color;
+}
+
 .filter-panel-wrapper {
   max-width: 90%;
   margin: 16px auto;
-  border: 1px solid #e0e0e0;
+  border: 1px solid variables.$inside-border;
   border-radius: 8px;
   background: #ffffff;
 
   mat-divider {
     margin: 12px;
+    color: variables.$inside-border;
   }
 }
 
-.add-event-wrapper {
+.add-step-wrapper {
   margin-top: 8px;
   margin-bottom: 8px;
   display: flex;
   justify-content: center;
+
+  button {
+    padding: 8px 16px;
+    border: none;
+    color: variables.$add-step-blue;
+    font-weight: bolder;
+    font-size: medium;
+    background-color: transparent;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: transparent;
+  }
 }
 
 .apply-filter-wrapper {
   max-width: 90%;
   margin: 16px auto;
-}
 
-.customer-filter-wrapper {
-  max-width: 95%;
-  margin: 0 auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f4f4f4;
-}
-
-.customer-filter-title {
-  margin: 16px;
+  button {
+    color: variables.$brown;
+    background-color: variables.$apply-yellow;
+  }
 }
 
 .discard-filters-wrapper {
@@ -53,7 +75,23 @@
   display: flex;
   justify-content: flex-end;
   button {
-    color: #f44336;
+    color: variables.$discard-red;
+  }
+}
+
+.filters {
+  .event-attribute-button {
+    padding: 8px 16px;
+    border: none;
+    font-weight: bolder;
+    font-size: 16px;
+    color: variables.$add-step-blue;
+    background-color: transparent;
+  }
+
+  .event-attribute-button:hover {
+    cursor: pointer;
+    background-color: transparent;
   }
 }
 
@@ -63,6 +101,10 @@
 
   .event-attribute-close-button {
     visibility: hidden;
+
+    mat-icon {
+      color: variables.$light-purple;
+    }
   }
 }
 

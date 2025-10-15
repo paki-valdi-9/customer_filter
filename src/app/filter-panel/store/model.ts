@@ -17,7 +17,7 @@ export interface CustomerEventDomain {
 export interface EventAttribute {
   id: string;
   value: PropertyValueType;
-  valueFrom?: PropertyValueType; // if in between is selected as operator
+  valueFrom?: number;
   operator: StringOperator | NumberOperator;
   name: string | null;
 }

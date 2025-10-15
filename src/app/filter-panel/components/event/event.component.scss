@@ -1,0 +1,31 @@
+@use '../../../../variables/variables';
+
+.step-banner {
+  margin-bottom: 16px;
+
+  .step-count {
+    color: variables.$light-purple;
+  }
+
+  .step-name {
+    color: variables.$input-color;
+  }
+
+  .step-count,
+  .step-name {
+    font-size: 18px;
+  }
+
+  mat-icon {
+    color: variables.$light-purple;
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.event-buttons-wrapper {
+  mat-icon {
+    color: variables.$light-purple;
+  }
+}

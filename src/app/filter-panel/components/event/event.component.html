@@ -1,15 +1,23 @@
-<mat-form-field appearance="outline">
-  <mat-label>Select an event</mat-label>
-  <mat-select
-    [value]="selectedFunnelStep.name"
-    (selectionChange)="onEventChange(selectedFunnelStep, $event.value)"
-  >
-    @for(fetchedEvent of this.fetchedEvents; track fetchedEvent.name) {
-    <mat-option [value]="fetchedEvent.name">{{ fetchedEvent.name }}</mat-option>
-    }
-  </mat-select>
-</mat-form-field>
+@let stepBannerName = selectedFunnelStep.name ?? 'Unnamed step';
 <div>
+  <div class="step-banner">
+    <mat-label class="step-count">{{ selectedEventIndex + 1 }}. Step:</mat-label>
+    <mat-label class="step-name">{{ '  ' + stepBannerName + '  ' }}</mat-label>
+    <mat-icon>edit</mat-icon>
+  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>Select an event</mat-label>
+    <mat-select
+      [value]="selectedFunnelStep.name"
+      (selectionChange)="onEventChange(selectedFunnelStep, $event.value)"
+    >
+      @for(fetchedEvent of this.fetchedEvents; track fetchedEvent.name) {
+      <mat-option [value]="fetchedEvent.name">{{ fetchedEvent.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+<div class="event-buttons-wrapper">
   <button mat-icon-button (click)="copyEvent(selectedEventIndex)" title="Copy filter">
     <mat-icon aria-hidden="false" aria-label="Copy icon">content_copy</mat-icon>
   </button>
