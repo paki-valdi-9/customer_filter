@@ -5,35 +5,25 @@
   </div>
 
   <div class="filter-panel-wrapper">
-    @for(event of funnelSteps(); track $index) {
+    @for(step of funnelSteps(); track $index) {
     <div class="event-group">
       <div class="event-wrapper">
         <app-event-component
           [fetchedEvents]="fetchedEvents"
           [funnelSteps]="funnelSteps"
-          [selectedEvent]="event"
+          [selectedFunnelStep]="step"
           [selectedEventIndex]="$index"
         ></app-event-component>
       </div>
 
-      @if(event.name) {
+      @if(step.name) {
       <div class="filters">
-        @for(attribute of event.eventAttributes; track attribute.id) {
+        @for(attribute of step.eventAttributes; track attribute.id) {
         <div class="filter-row">
-          <!-- <app-property-component> </app-property-component> -->
-          <mat-form-field>
-            <mat-label>Select an attribute</mat-label>
-            <mat-select
-              [value]="attribute.name"
-              (selectionChange)="onAttributeNameChange(event, attribute, $event.value)"
-            >
-              @for(property of getPropertiesOfEvent(event.name!) ; track property.name) {
-              <mat-option [value]="property.name">
-                {{ property.name }}
-              </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+          <app-property-component
+            [selectedAttribute]="attribute"
+            [selectedAttributeProperties]="getPropertiesOfEvent(step.name!)"
+          ></app-property-component>
 
           <mat-form-field>
             <mat-label>Operator</mat-label>
@@ -41,8 +31,8 @@
               [value]="attribute.operator"
               (selectionChange)="attribute.operator = $event.value"
             >
-              @for(operator of getOperatorsOfProperty(event.name!, attribute.name!) ; track
-              operator) {
+              @for(operator of getOperatorsOfProperty(step.name!, attribute.name!) ; track operator)
+              {
               <mat-option [value]="operator">
                 {{ operator }}
               </mat-option>
@@ -52,12 +42,10 @@
 
           <div class="property-values-wrapper">
             <mat-form-field>
-              <mat-label>Value</mat-label>
               <input matInput [(ngModel)]="attribute.value" />
             </mat-form-field>
             @if(attribute.operator === 'in between') {
             <mat-form-field>
-              <mat-label>Value - in between</mat-label>
               <input matInput [(ngModel)]="attribute.valueFrom" />
             </mat-form-field>
             }
@@ -66,13 +54,13 @@
           <button
             class="event-attribute-close-button"
             mat-icon-button
-            (click)="removeEventAttribute(event, attribute.id)"
+            (click)="removeEventAttribute(step, attribute.id)"
           >
             <mat-icon>close</mat-icon>
           </button>
         </div>
         }
-        <button mat-stroked-button (click)="addEventAttribute(event)">
+        <button mat-stroked-button (click)="addEventAttribute(step)">
           +Add an event attribute
         </button>
       </div>

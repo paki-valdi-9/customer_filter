@@ -1,6 +1,6 @@
 import { NumberOperator, StringOperator } from '@customer_filter/app/shared/store/model';
 
-type PropertyValueType = string | number;
+type PropertyValueType = string | number | null;
 
 export interface PropertyDomain {
   id: string;
@@ -22,7 +22,7 @@ export interface EventAttribute {
   name: string | null;
 }
 
-export interface FunnelSteps {
+export interface FunnelStep {
   id: string;
   name: string | null;
   eventAttributes: EventAttribute[];
