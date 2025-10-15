@@ -1,6 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { CustomerEvent, EventFilterGroup } from '../services/models';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +9,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { EventComponent } from './components/event/event.component';
+import { CustomerEventDomain, EventAttribute, FunnelSteps, PropertyDomain } from './store/model';
+import { NUMBER_OPS_CONST, STRING_OPS_CONST } from '../shared/store/constants';
+import { NumberOperator, StringOperator } from '../shared/store/model';
 
 @Component({
   selector: 'app-filter-panel',
@@ -26,58 +28,84 @@ import { EventComponent } from './components/event/event.component';
     FormsModule,
     MatDividerModule,
     EventComponent,
+    // PropertyComponent,
   ],
 })
 export class FilterPanelComponent {
-  @Input() events: CustomerEvent[] = [];
+  @Input() fetchedEvents: CustomerEventDomain[] = [];
 
-  eventGroups = signal<EventFilterGroup[]>([{ id: uuidv4(), event: null, properties: [] }]);
-  stringOps = ['equals', 'does not equal', 'contains', 'does not contain'];
-  numberOps = ['equal to', 'in between', 'less than', 'greater than'];
+  private readonly stringOps: StringOperator[] = STRING_OPS_CONST;
+  private readonly numberOps: NumberOperator[] = NUMBER_OPS_CONST;
 
-  addEventGroup() {
-    this.eventGroups.update((groups) => [...groups, { id: uuidv4(), event: null, properties: [] }]);
+  protected funnelSteps = signal<FunnelSteps[]>([
+    { id: uuidv4(), name: null, eventAttributes: [] },
+  ]);
+
+  protected addFunnelStep() {
+    this.funnelSteps.update((groups) => [
+      ...groups,
+      { id: uuidv4(), name: null, eventAttributes: [] },
+    ]);
   }
 
-  discardEvents() {
-    this.eventGroups.set([{ id: uuidv4(), event: null, properties: [] }]);
+  protected discardAllFunnelSteps() {
+    this.funnelSteps.set([{ id: uuidv4(), name: null, eventAttributes: [] }]);
   }
 
-  addFilter(group: EventFilterGroup) {
-    this.eventGroups.update((groups) =>
-      groups.map((g) =>
-        g.id === group.id
+  protected addEventAttribute(newGroup: FunnelSteps) {
+    this.funnelSteps.update((groups) =>
+      groups.map((group) =>
+        group.id === newGroup.id
           ? {
-              ...g,
-              properties: [
-                ...g.properties,
+              ...group,
+              eventAttributes: [
+                ...group.eventAttributes,
                 {
                   id: uuidv4(),
-                  property: null,
+                  name: null,
                   operator: 'equals',
-                  value: '',
+                  value: null,
                 },
               ],
             }
-          : g
+          : group
       )
     );
   }
 
-  removeFilter(group: EventFilterGroup, propertyId: string) {
-    group.properties = group.properties.filter((p) => p.id !== propertyId);
+  protected removeEventAttribute(group: FunnelSteps, propertyId: string) {
+    group.eventAttributes = group.eventAttributes.filter((p) => p.id !== propertyId);
   }
 
-  getPropertiesForEvent(eventName: string) {
-    return this.events.find((e) => e.name === eventName)?.properties ?? [];
+  protected getPropertiesOfEvent(selectedEventName: string): PropertyDomain[] {
+    return this.fetchedEvents.find((event) => event.name === selectedEventName).properties;
   }
 
-  getOperatorsForProperty(eventName: string, propName: string) {
-    const prop = this.getPropertiesForEvent(eventName).find((p) => p.name === propName);
-    return prop?.type === 'number' ? this.numberOps : this.stringOps;
+  protected getOperatorsOfProperty(selectedEventName: string, selectedPropName: string) {
+    const selectedProperty = this.getPropertiesOfEvent(selectedEventName).find(
+      (property) => property.name === selectedPropName
+    );
+    return selectedProperty?.type === 'number' ? this.numberOps : this.stringOps;
   }
 
-  applyFilters() {
-    console.log('APPLY FILTERS MODEL:', JSON.parse(JSON.stringify(this.eventGroups())));
+  onAttributeNameChange(
+    editedFunnelStep: FunnelSteps,
+    editedAttribute: EventAttribute,
+    newAttributeName: string
+  ) {
+    editedAttribute.name = newAttributeName;
+
+    const properties = this.getPropertiesOfEvent(editedFunnelStep.name!);
+    const selectedProperty = properties
+      ? properties.find((p: any) => p.name === newAttributeName)
+      : undefined;
+
+    editedAttribute.operator =
+      selectedProperty?.type === 'number' ? this.numberOps[0] : this.stringOps[0];
+    editedAttribute.value = editedAttribute.valueFrom = null;
+  }
+
+  protected applyFilters() {
+    console.log('APPLY FILTERS MODEL:', JSON.parse(JSON.stringify(this.funnelSteps())));
   }
 }

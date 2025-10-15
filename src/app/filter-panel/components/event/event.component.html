@@ -1,11 +1,11 @@
 <mat-form-field appearance="outline">
-  <mat-label>Select event</mat-label>
+  <mat-label>Select an event</mat-label>
   <mat-select
-    [value]="selectedEvent.event"
+    [value]="selectedEvent.name"
     (selectionChange)="onEventChange(selectedEvent, $event.value)"
   >
-    @for(e of this.events; track e.name) {
-    <mat-option [value]="e.name">{{ e.name }}</mat-option>
+    @for(fetchedEvent of this.fetchedEvents; track fetchedEvent.name) {
+    <mat-option [value]="fetchedEvent.name">{{ fetchedEvent.name }}</mat-option>
     }
   </mat-select>
 </mat-form-field>

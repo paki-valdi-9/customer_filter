@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { CustomerEvent, Property } from './models';
+import { CustomerEventDto, EventsDto, PropertyDto } from './models';
+import { CustomerEventDomain } from '../filter-panel/store/model';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -10,20 +12,20 @@ export class EventService {
   private url = 'https://br-fe-assignment.github.io/customer-events/events.json';
   private readonly http = inject(HttpClient);
 
-  getEvents(): Observable<CustomerEvent[]> {
-    return this.http.get<any>(this.url).pipe(
-      map(
-        (data) =>
-          (data.events || []).map((e: any) => ({
-            id: e.type,
-            name: e.type,
-            properties: e.properties.map((p: any) => ({
-              id: p.property,
-              name: p.property,
-              type: p.type as 'string' | 'number',
-            })) as Property[],
-          })) as CustomerEvent[]
-      )
+  toDomainEvents(): Observable<CustomerEventDomain[]> {
+    return this.http.get<EventsDto>(this.url).pipe(
+      map((fetchedData) => {
+        console.log(fetchedData);
+        return (fetchedData.events || []).map((event: CustomerEventDto) => ({
+          id: uuidv4(),
+          name: event.type,
+          properties: event.properties.map((property: PropertyDto) => ({
+            id: uuidv4(),
+            type: property.type,
+            name: property.property,
+          })),
+        }));
+      })
     );
   }
 }

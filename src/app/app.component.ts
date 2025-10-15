@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FilterPanelComponent } from './filter-panel/filter-panel.component';
-import { CustomerEvent } from './services/models';
 import { EventService } from './services/event-filters';
+import { CustomerEventDomain } from './filter-panel/store/model';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +12,9 @@ import { EventService } from './services/event-filters';
 export class AppComponent {
   private readonly service = inject(EventService);
 
-  events: CustomerEvent[] = [];
+  protected fetchedEvents: CustomerEventDomain[] = [];
 
   ngOnInit() {
-    this.service.getEvents().subscribe((res) => (this.events = res));
+    this.service.toDomainEvents().subscribe((res) => (this.fetchedEvents = res));
   }
 }
