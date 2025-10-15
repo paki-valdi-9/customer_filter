@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,6 +13,8 @@ import { CustomerEventDomain, FunnelStep, PropertyDomain } from './store/model';
 import { NUMBER_OPS_CONST, STRING_OPS_CONST } from '../shared/store/constants';
 import { PropertyComponent } from './components/property/property.component';
 import { OperatorComponent } from './components/operator/operator.component';
+import { EventService } from '../services/event-filters';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-filter-panel',
   templateUrl: './filter-panel.component.html',
@@ -32,10 +34,24 @@ import { OperatorComponent } from './components/operator/operator.component';
     OperatorComponent,
   ],
 })
-export class FilterPanelComponent {
-  @Input() fetchedEvents: CustomerEventDomain[] = [];
+export class FilterPanelComponent implements OnInit, OnDestroy {
+  private readonly service = inject(EventService);
+  private readonly onDestroy$ = new Subject<void>();
 
+  protected fetchedEvents = signal<CustomerEventDomain[]>([]);
   protected funnelSteps = signal<FunnelStep[]>([{ id: uuidv4(), name: null, eventAttributes: [] }]);
+
+  ngOnInit(): void {
+    this.service
+      .toDomainEvents()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((events) => this.fetchedEvents.set(events));
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
 
   protected addFunnelStep() {
     this.funnelSteps.update((steps) => [
@@ -59,8 +75,8 @@ export class FilterPanelComponent {
                 {
                   id: uuidv4(),
                   name: null,
-                  operator: 'equals',
-                  value: null,
+                  operator: undefined,
+                  value: undefined,
                 },
               ],
             }
@@ -74,7 +90,7 @@ export class FilterPanelComponent {
   }
 
   protected getPropertiesOfEvent(selectedEventName: string): PropertyDomain[] {
-    return this.fetchedEvents.find((event) => event.name === selectedEventName)?.properties ?? [];
+    return this.fetchedEvents().find((event) => event.name === selectedEventName)?.properties ?? [];
   }
 
   protected getOperatorsOfProperty(selectedEventName: string, selectedPropName: string) {

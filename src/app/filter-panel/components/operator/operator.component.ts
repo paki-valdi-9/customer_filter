@@ -19,12 +19,22 @@ export class OperatorComponent implements OnChanges {
   @Input() selectedAttribute: EventAttribute | undefined;
   @Input() selectedAttributeOperators: NumberOperator[] | StringOperator[] = STRING_OPS_CONST;
 
-  ngOnChanges() {
-    if (NUMBER_OPS_CONST.find((op) => op === this.selectedAttribute.operator)) {
+  ngOnChanges(): void {
+    this.adjustValuesForOperator();
+  }
+
+  protected onOperatorChange() {
+    this.adjustValuesForOperator();
+  }
+
+  private adjustValuesForOperator() {
+    const isNumber = NUMBER_OPS_CONST.find((op) => op === this.selectedAttribute?.operator);
+    if (isNumber) {
       this.selectedAttribute!.value = 0;
-      this.selectedAttribute!.valueFrom = 0;
+      this.selectedAttribute!.valueFrom =
+        this.selectedAttribute?.operator === 'in between' ? 0 : undefined;
     } else {
-      this.selectedAttribute!.value = '';
+      this.selectedAttribute!.value = null;
       this.selectedAttribute!.valueFrom = undefined;
     }
   }

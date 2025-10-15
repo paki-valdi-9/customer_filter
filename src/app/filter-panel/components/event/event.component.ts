@@ -1,25 +1,51 @@
-import { Component, Input, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, WritableSignal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomerEventDomain, FunnelStep } from '../../store/model';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map, Observable, startWith } from 'rxjs';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-event-component',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatSelectModule, MatFormFieldModule, MatIconModule],
+  imports: [
+    MatButtonModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatIconModule,
+    NgxMatSelectSearchModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+  ],
 })
-export class EventComponent {
-  @Input() fetchedEvents: CustomerEventDomain[] = [];
+export class EventComponent implements OnChanges {
+  @Input() fetchedEvents!: CustomerEventDomain[];
   @Input() funnelSteps!: WritableSignal<FunnelStep[]>;
   @Input() selectedFunnelStep: FunnelStep | undefined;
   @Input() selectedEventIndex: number | undefined;
 
-  onEventChange(group: FunnelStep, selectedEventName: string) {
+  protected eventFilterFormControl = new FormControl('');
+  protected filteredEvents$!: Observable<CustomerEventDomain[]>;
+
+  ngOnChanges(): void {
+    this.filteredEvents$ = this.eventFilterFormControl.valueChanges.pipe(
+      startWith(''),
+      map((search) =>
+        this.fetchedEvents.filter((e) =>
+          e.name.toLowerCase().includes((search || '').toLowerCase())
+        )
+      )
+    );
+  }
+
+  protected onEventChange(group: FunnelStep, selectedEventName: string) {
     this.funnelSteps.update((steps) =>
       steps.map((step) =>
         step.id === group.id ? { ...step, name: selectedEventName, eventAttributes: [] } : step
@@ -27,7 +53,7 @@ export class EventComponent {
     );
   }
 
-  copyEvent(index: number) {
+  protected copyEvent(index: number) {
     this.funnelSteps.update((steps) => {
       const eventGroup = steps.find((step) => step.id === this.selectedFunnelStep?.id);
       const copiedGroup = { ...eventGroup, id: uuidv4() };
@@ -35,7 +61,7 @@ export class EventComponent {
     });
   }
 
-  removeEventGroup(id: string) {
+  protected removeEventGroup(id: string) {
     this.funnelSteps.update((steps) => steps.filter((step) => step.id !== id));
   }
 }

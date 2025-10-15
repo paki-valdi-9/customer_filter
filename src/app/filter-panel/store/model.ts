@@ -1,6 +1,6 @@
 import { NumberOperator, StringOperator } from '@customer_filter/app/shared/store/model';
 
-type PropertyValueType = string | number | null;
+type PropertyValueType = string | number | null | undefined;
 
 export interface PropertyDomain {
   id: string;
@@ -17,7 +17,7 @@ export interface CustomerEventDomain {
 export interface EventAttribute {
   id: string;
   value: PropertyValueType;
-  valueFrom?: number;
+  valueFrom?: number | null;
   operator: StringOperator | NumberOperator;
   name: string | null;
 }
