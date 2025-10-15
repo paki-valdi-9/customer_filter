@@ -25,31 +25,13 @@
             [selectedAttributeProperties]="getPropertiesOfEvent(step.name!)"
           ></app-property-component>
 
-          <mat-form-field>
-            <mat-label>Operator</mat-label>
-            <mat-select
-              [value]="attribute.operator"
-              (selectionChange)="attribute.operator = $event.value"
-            >
-              @for(operator of getOperatorsOfProperty(step.name!, attribute.name!) ; track operator)
-              {
-              <mat-option [value]="operator">
-                {{ operator }}
-              </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <div class="property-values-wrapper">
-            <mat-form-field>
-              <input matInput [(ngModel)]="attribute.value" />
-            </mat-form-field>
-            @if(attribute.operator === 'in between') {
-            <mat-form-field>
-              <input matInput [(ngModel)]="attribute.valueFrom" />
-            </mat-form-field>
-            }
-          </div>
+          <app-operator-component
+            class="property-values-wrapper"
+            [selectedStepName]="step.name!"
+            [selectedAttribute]="attribute"
+            [selectedAttributeOperators]="getOperatorsOfProperty(step.name!, attribute.name!)"
+          >
+          </app-operator-component>
 
           <button
             class="event-attribute-close-button"

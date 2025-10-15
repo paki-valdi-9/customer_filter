@@ -1,0 +1,21 @@
+import { Component, Input } from '@angular/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { EventAttribute } from '../../store/model';
+import { STRING_OPS_CONST } from '../../../shared/store/constants';
+import { NumberOperator, StringOperator } from '../../../shared/store/model';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+
+@Component({
+  selector: 'app-operator-component',
+  templateUrl: './operator.component.html',
+  styleUrls: ['./operator.component.scss'],
+  standalone: true,
+  imports: [FormsModule, MatSelectModule, MatFormFieldModule, MatInputModule],
+})
+export class OperatorComponent {
+  @Input() selectedStepName: string | undefined;
+  @Input() selectedAttribute: EventAttribute | undefined;
+  @Input() selectedAttributeOperators: NumberOperator[] | StringOperator[] = STRING_OPS_CONST;
+}
